@@ -1,16 +1,11 @@
 const Razorpay = require("razorpay");
-// const crypto = require("crypto");
+const crypto = require("crypto");
 const Donation = require("../models/Donation");
 const Member = require("../models/Member");
 const razorpay = require("../config/razorpay");
 const logger = require("../utils/logger"); 
 // const { sequelize } = require("../config/db"); 
 const { sequelize } = require("../models"); 
-const crypto = require("crypto");
-const generatedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-    .digest("hex");
 
 
 
@@ -31,7 +26,7 @@ exports.createOrder = async (req, res) => {
         const options = {
             amount: Math.round(amount * 100),
             currency,
-            receipt: `receipt_${Date.now()}`,
+            receipt: receipt_${Date.now()},
             payment_capture: 1,
             notes: { type, ...metadata }
         };
@@ -53,7 +48,7 @@ exports.verifyPayment = async (req, res) => {
 
         const generatedSignature = crypto
             .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+            .update(${razorpay_order_id}|${razorpay_payment_id})
             .digest("hex");
 
         if (generatedSignature !== razorpay_signature) {
@@ -132,6 +127,6 @@ exports.razorpayWebhook = async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error) {
         logger.error("Webhook processing failed", { error: error.message });
-        res.status(500).json({ error: "Webhook processing failed" });
-    }
+        res.status(500).json({ error: "Webhook processing failed" });
+    }
 };
