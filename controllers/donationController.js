@@ -4,19 +4,18 @@ const Donation = require('../models/Donation');
 exports.createDonation = async (req, res) => {
     const {
         amount,
+        customAmount,
         donationType,
         firstName,
         lastName,
         email,
         phone,
-        address,
+        streetAddress,
         city,
         state,
         zip,
         country,
-        isAnonymous,
         tools,
-        materials,
         paymentMethod,
         upiId,
     } = req.body;
@@ -24,19 +23,18 @@ exports.createDonation = async (req, res) => {
     try {
         const donation = await Donation.create({
             amount,
+            customAmount,
             donationType,
             firstName,
             lastName,
             email,
             phone,
-            address,
+            streetAddress,
             city,
             state,
             zip,
             country,
-            isAnonymous,
-            tools: tools || null,
-            materials: materials || null,
+            tools: tools || null, // Assuming tools is an array or string
             paymentMethod,
             upiId: paymentMethod === 'upi' ? upiId : null,
         });

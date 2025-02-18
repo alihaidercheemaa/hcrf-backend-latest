@@ -4,7 +4,7 @@ const sequelize = require('../config/sequelize');
 const Donation = sequelize.define('Donation', {
     amount: {
         type: DataTypes.FLOAT,
-        allowNull: false,
+        allowNull: true,
     },
     customAmount: {
         type: DataTypes.FLOAT,
@@ -12,26 +12,26 @@ const Donation = sequelize.define('Donation', {
     },
     donationType: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     firstName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     lastName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
             isEmail: true,
         },
     },
     phone: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
             isNumeric: true,
         },
@@ -56,51 +56,17 @@ const Donation = sequelize.define('Donation', {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    isAnonymous: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
+   
     tools: {
-        type: DataTypes.JSON,
+        type: DataTypes.STRING,
         allowNull: true,
     },
-    materials: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
-    enhancedWorkshop: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
-    craftInnovation: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
-    productPhotography: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
-    craftDocumentaries: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
-    craftResearch: {
-        type: DataTypes.JSON,
-        allowNull: true,
-    },
+   
     paymentMethod: {
         type: DataTypes.STRING,
-        allowNull: false,
-    },
-    employerName: {
-        type: DataTypes.STRING,
         allowNull: true,
     },
-    matchingGift: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: false,
-    },
+   
 });
 
 module.exports = Donation;
