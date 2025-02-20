@@ -1,7 +1,23 @@
-// Assuming savePreOrder and getPreOrderData are defined in your controller file
 const PreOrder = require('../models/PreOrder');
 const jwt = require('jsonwebtoken');
-const sendEmail = require('../utils/sendEmail'); // Email utility
+const sendEmail = require('../utils/sendEmail');
+
+// Email template function
+const generatePreOrderEmail = (customerName, releaseDate) => {
+  return `Pre-Order Confirmation – Hamadan Craft Revival Foundation E-Publication
+
+Dear ${customerName},
+
+Thank you for pre-ordering the digital copy of the Hamadan Craft Revival Foundation's E-Publication! 🎉
+
+What to Expect:
+✅ Delivery: Your digital copy will be sent via email upon release.
+✅ Download Access: The downloadable link will be accessible only for your registered email and can be downloaded only once.
+📅 Release Date: ${releaseDate}
+📩 Support: If you encounter any issues, please reach us at info@hamdancraft.org.
+
+We appreciate your support in preserving and promoting Kashmiri craftsmanship!`;
+};
 
 // Save pre-order data
 exports.savePreOrder = async (req, res) => {
@@ -12,7 +28,7 @@ exports.savePreOrder = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const { userId, email, isAdmin, isMember } = decoded;
+    const { userId, email, isAdmin, isMember, name } = decoded;
 
     if (!userId || !email) {
       return res.status(400).json({ error: 'User ID and email are required to save pre-order.' });
@@ -26,12 +42,15 @@ exports.savePreOrder = async (req, res) => {
       createdAt: Date.now(),
     });
 
-    const subject = 'Pre-order Confirmation';
-    const text = 'Thank you for your pre-order. We will reach out to you soon.';
-    await sendEmail(email, subject, text);
+    // Send confirmation email
+    const releaseDate = process.env.RELEASE_DATE || 'To be announced'; // You can set this in your environment variables
+    const emailContent = generatePreOrderEmail(name || 'Valued Customer', releaseDate);
+    const subject = 'Pre-Order Confirmation – Hamadan Craft Revival Foundation';
+    
+    await sendEmail(email, subject, emailContent);
 
     res.status(201).json({
-      message: 'Pre-order recorded successfully. We will contact you soon.',
+      message: 'Pre-order recorded successfully. Confirmation email has been sent.',
       data: preOrder,
     });
   } catch (error) {
@@ -55,3 +74,5 @@ exports.getPreOrderData = async (req, res) => {
     res.status(500).json({ message: 'Error fetching pre-order data' });
   }
 };
+
+module.exports = exports;
